@@ -13,7 +13,9 @@ function App() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
-    });
+    })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   const handleTodo = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -35,8 +37,8 @@ function App() {
         <button onClick={handlePost}>Submit</button>
       </form>
       <div>
-        {data.map((todo) => (
-          <p>{todo}</p>
+        {data.map((todo, i) => (
+          <p key={i}>{todo}</p>
         ))}
       </div>
     </>
