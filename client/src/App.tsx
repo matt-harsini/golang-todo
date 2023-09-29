@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { Button } from "./components/ui/Button";
+import { Input } from "./components/ui/input";
+import { Label } from "@radix-ui/react-label";
 
 function App() {
   const [data, setData] = useState<string[]>([]);
@@ -25,16 +28,22 @@ function App() {
 
   return (
     <>
-      <form>
-        <label htmlFor="todo">Add todo</label>
-        <input
+      <form className="flex flex-col gap-y-4 max-w-7xl mx-auto pt-12">
+        <Label htmlFor="todo" className="mx-auto">
+          Add todo
+        </Label>
+        <Input
           type="text"
           id="todo"
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
-        <button onClick={handleTodo}>Add todo</button>
-        <button onClick={handlePost}>Submit</button>
+        <Button onClick={handleTodo} className="max-w-sm w-full mx-auto">
+          Add todo
+        </Button>
+        <Button onClick={handlePost} className="max-w-sm w-full mx-auto">
+          Submit
+        </Button>
       </form>
       <div>
         {data.map((todo, i) => (
