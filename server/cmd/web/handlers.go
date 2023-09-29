@@ -6,9 +6,10 @@ import (
 	"net/http"
 )
 
-func handleTodo(w http.ResponseWriter, r *http.Request) {
+func (app *application) handleTodo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
 	w.Header().Set("Access-Control-Allow-Headers", "*")
+
 	if r.Method != "POST" {
 		return
 	}
