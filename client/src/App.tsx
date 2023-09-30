@@ -1,28 +1,46 @@
 import { useState, useEffect } from "react";
-import { Button } from "./components/ui/Button";
-import { Input } from "./components/ui/input";
-import { Label } from "@radix-ui/react-label";
+import { Button, Card, Input, Label } from "./components/ui";
+
+type Todo = {
+  ID: number;
+  Todo: string;
+  Created: string;
+};
 
 function App() {
-  const [data, setData] = useState<string[]>([]);
+  const [data, setData] = useState<Todo[]>([]);
   const [input, setInput] = useState("");
 
   useEffect(() => {
+    fetch("http://localhost:4001/get-all")
+      .then((res) => res.json())
+      .then((res) => setData(res));
+  }, []);
+
+  const postData = () => {
     fetch("http://localhost:4001/submit", {
       method: "POST",
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data.at(-1)),
+      body: JSON.stringify(input),
     })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
-  }, [data]);
+  };
 
   const handleTodo = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setData((previous) => [...previous, input]);
+
+    setData((previous) => {
+      return [
+        ...previous,
+        { ID: Date.now(), Todo: input, Created: String(Date.now()) },
+      ];
+    });
+
+    postData();
   };
 
   return (
@@ -41,10 +59,10 @@ function App() {
           Add todo
         </Button>
       </form>
-      <div>
-        {data.map((todo, i) => (
-          <p key={i}>{todo}</p>
-        ))}
+      <div className="mt-12 max-w-7xl mx-auto">
+        {data.map((todo) => {
+          return <Card key={todo.Created}>{todo.Todo}</Card>;
+        })}
       </div>
     </>
   );
