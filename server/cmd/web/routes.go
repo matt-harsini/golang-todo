@@ -4,6 +4,6 @@ import "net/http"
 
 func (app *application) routes() *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/submit", app.handleTodo)
+	mux.HandleFunc("/submit", app.submitTodo)
 	return mux
 }

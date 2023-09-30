@@ -27,6 +27,8 @@ func main() {
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime)
 
 	db, err := openDB(*dsn)
+	defer db.Close()
+
 	if err != nil {
 		errorLog.Fatal(err)
 	}
@@ -48,7 +50,7 @@ func main() {
 }
 
 func openDB(dsn string) (*sql.DB, error) {
-	db, err := sql.Open("mysql", "golang:pass@/golangtodo?parseTime=true")
+	db, err := sql.Open("mysql", dsn)
 
 	if err != nil {
 		return nil, err
