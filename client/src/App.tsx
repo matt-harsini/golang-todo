@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "./components/ui/Button";
 import { Input } from "./components/ui/input";
 import { Label } from "@radix-ui/react-label";
@@ -7,8 +7,7 @@ function App() {
   const [data, setData] = useState<string[]>([]);
   const [input, setInput] = useState("");
 
-  const handlePost = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  useEffect(() => {
     fetch("http://localhost:4000/submit", {
       method: "POST",
       mode: "cors",
@@ -19,7 +18,7 @@ function App() {
     })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
-  };
+  }, [data]);
 
   const handleTodo = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -29,7 +28,7 @@ function App() {
   return (
     <>
       <form className="flex flex-col gap-y-4 max-w-7xl mx-auto pt-12">
-        <Label htmlFor="todo" className="mx-auto">
+        <Label htmlFor="todo" className="">
           Add todo
         </Label>
         <Input
@@ -40,9 +39,6 @@ function App() {
         />
         <Button onClick={handleTodo} className="max-w-sm w-full mx-auto">
           Add todo
-        </Button>
-        <Button onClick={handlePost} className="max-w-sm w-full mx-auto">
-          Submit
         </Button>
       </form>
       <div>
