@@ -8,13 +8,13 @@ function App() {
   const [input, setInput] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:4000/submit", {
+    fetch("http://localhost:4001/submit", {
       method: "POST",
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(data.at(-1)),
     })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
