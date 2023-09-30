@@ -2,7 +2,6 @@ package models
 
 import (
 	"database/sql"
-	"fmt"
 	"time"
 )
 
@@ -21,7 +20,7 @@ func (model *TodosModel) Insert(todo string) (int, error) {
 	_, err := model.DB.Exec(stmt, todo)
 
 	if err != nil {
-		fmt.Println(err)
+		return 0, err
 	}
 
 	return 0, nil
