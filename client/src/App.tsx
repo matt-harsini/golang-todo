@@ -14,11 +14,12 @@ function App() {
   useEffect(() => {
     fetch("http://localhost:4000/get-all")
       .then((res) => res.json())
-      .then((res) => setData(res));
+      .then((res) => setData(res))
+      .catch((err) => console.log(err));
   }, []);
 
   const postData = () => {
-    fetch("http://localhost:4001/submit", {
+    fetch("http://localhost:4000/submit", {
       method: "POST",
       mode: "cors",
       headers: {
@@ -26,25 +27,39 @@ function App() {
       },
       body: JSON.stringify(input),
     })
-      .then((res) => console.log(res))
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        return setData((previous) => {
+          return [
+            ...previous,
+            { ID: res, Todo: input, Created: String(Date.now()) },
+          ];
+        });
+      })
       .catch((err) => console.log(err));
   };
 
   const handleTodo = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (input == "") return;
-
-    setData((previous) => {
-      return [
-        ...previous,
-        { ID: Date.now(), Todo: input, Created: String(Date.now()) },
-      ];
-    });
-
     postData();
   };
 
-  const handleDelete = () => {};
+  const handleDelete = (id: number) => {
+    fetch(`http://localhost:4000/delete?id=${id}`, {
+      method: "DELETE",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(input),
+    })
+      .then(() => {
+        setData((prevState) => prevState.filter((todo) => todo.ID != id));
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <>
@@ -70,7 +85,7 @@ function App() {
               className="flex justify-between items-center gap-x-4 p-4"
             >
               <span>{todo.Todo}</span>
-              <Button onClick={handleDelete}>Delete</Button>
+              <Button onClick={() => handleDelete(todo.ID)}>Delete</Button>
             </Card>
           );
         })}
