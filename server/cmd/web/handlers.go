@@ -42,6 +42,7 @@ func (app *application) submitTodo(w http.ResponseWriter, r *http.Request) {
 func (app *application) getAllTodos(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
 	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Content-Type", "application/json")
 
 	if r.Method == http.MethodOptions {
 		w.Write([]byte("Ok"))
@@ -81,6 +82,32 @@ func (app *application) deleteTodo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err := app.todos.Delete(r.URL.Query().Get("id"))
+
+	if err != nil {
+		app.errorLog.Print(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+
+	w.Write([]byte("Ok"))
+}
+
+func (app *application) editTodo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "*")
+
+	if r.Method == http.MethodOptions {
+		w.Write([]byte("Ok"))
+		return
+	}
+
+	if r.Method != http.MethodPatch {
+		w.Header().Set("Allow", http.MethodPatch)
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	err := app.todos.Edit(r.URL.Query().Get("id"))
 
 	if err != nil {
 		app.errorLog.Print(err)

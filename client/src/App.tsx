@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Button, Card, Input, Label } from "./components/ui";
+import { Button, Input, Label } from "./components/ui";
+import { TodoCard } from "./components/reusables";
 
-type Todo = {
+export type Todo = {
   ID: number;
   Todo: string;
   Created: string;
@@ -40,25 +41,10 @@ function App() {
       .catch((err) => console.log(err));
   };
 
-  const handleTodo = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (input == "") return;
     postData();
-  };
-
-  const handleDelete = (id: number) => {
-    fetch(`http://localhost:4000/delete?id=${id}`, {
-      method: "DELETE",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(input),
-    })
-      .then(() => {
-        setData((prevState) => prevState.filter((todo) => todo.ID != id));
-      })
-      .catch((err) => console.log(err));
   };
 
   return (
@@ -73,20 +59,19 @@ function App() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
-        <Button onClick={handleTodo} className="max-w-sm w-full mx-auto">
+        <Button onClick={handleSubmit} className="max-w-sm w-full mx-auto">
           Add todo
         </Button>
       </form>
-      <div className="mt-12 max-w-7xl mx-auto px-12">
+      <div className="mt-12 max-w-7xl mx-auto px-12 flex flex-col gap-y-2">
         {data.map((todo) => {
           return (
-            <Card
-              key={todo.Created}
-              className="flex justify-between items-center gap-x-4 p-4"
-            >
-              <span>{todo.Todo}</span>
-              <Button onClick={() => handleDelete(todo.ID)}>Delete</Button>
-            </Card>
+            <TodoCard
+              setData={setData}
+              ID={todo.ID}
+              Created={todo.Created}
+              Todo={todo.Todo}
+            />
           );
         })}
       </div>

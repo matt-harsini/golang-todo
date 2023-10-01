@@ -73,3 +73,21 @@ func (model *TodosModel) Delete(id string) error {
 
 	return nil
 }
+
+func (model *TodosModel) Edit(id string) error {
+	stmt := `DELETE from todos WHERE id = ?`
+
+	result, err := model.DB.Exec(stmt, id)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = result.LastInsertId()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
