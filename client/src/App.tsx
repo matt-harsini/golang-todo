@@ -12,7 +12,7 @@ function App() {
   const [input, setInput] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:4001/get-all")
+    fetch("http://localhost:4000/get-all")
       .then((res) => res.json())
       .then((res) => setData(res));
   }, []);
@@ -32,6 +32,7 @@ function App() {
 
   const handleTodo = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if (input == "") return;
 
     setData((previous) => {
       return [
@@ -43,9 +44,11 @@ function App() {
     postData();
   };
 
+  const handleDelete = () => {};
+
   return (
     <>
-      <form className="flex flex-col gap-y-4 max-w-7xl mx-auto pt-12">
+      <form className="flex flex-col gap-y-4 max-w-7xl mx-auto pt-12 px-12">
         <Label htmlFor="todo" className="">
           Add todo
         </Label>
@@ -59,9 +62,17 @@ function App() {
           Add todo
         </Button>
       </form>
-      <div className="mt-12 max-w-7xl mx-auto">
+      <div className="mt-12 max-w-7xl mx-auto px-12">
         {data.map((todo) => {
-          return <Card key={todo.Created}>{todo.Todo}</Card>;
+          return (
+            <Card
+              key={todo.Created}
+              className="flex justify-between items-center gap-x-4 p-4"
+            >
+              <span>{todo.Todo}</span>
+              <Button onClick={handleDelete}>Delete</Button>
+            </Card>
+          );
         })}
       </div>
     </>
