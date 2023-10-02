@@ -107,7 +107,15 @@ func (app *application) editTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := app.todos.Edit(r.URL.Query().Get("id"))
+	var todo string
+	err := json.NewDecoder(r.Body).Decode(&todo)
+
+	if err != nil {
+		app.errorLog.Print(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+
+	err = app.todos.Edit(r.URL.Query().Get("id"), todo)
 
 	if err != nil {
 		app.errorLog.Print(err)
