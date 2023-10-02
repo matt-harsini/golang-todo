@@ -71,6 +71,7 @@ function App() {
               ID={todo.ID}
               Created={todo.Created}
               Todo={todo.Todo}
+              key={todo.Created}
             />
           );
         })}
